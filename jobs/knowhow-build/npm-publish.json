@@ -1,0 +1,44 @@
+{
+  "id": "knowhow npm publish job",
+  "working_dir": "./",
+  "options": {
+    "timeoutms": 3600
+  },
+  "files": [],
+  "script": {
+    "env": {
+      "PATH": "/opt/local/bin:/opt/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin",
+      "CHECKOUT_DIR": "${working_dir}/knowhow",
+      "GIT_REPOSITORY": "https://github.com/jfelten/knowhow.git",
+      "GIT_USER": "MY_USER",
+      "GIT_PASSWORD": "MY_PASSWORD"
+    },
+    "commands": [
+      {
+        "command": "rm -rf $CHECKOUT_DIR"
+      },
+      {
+        "command": "mkdir -p $CHECKOUT_DIR"
+      },
+      {
+        "command": "git clone ${GIT_REPOSITORY} ${CHECKOUT_DIR}"
+      },
+      {
+        "command": "cd $CHECKOUT_DIR"
+      },
+      {
+        "command": "npm version patch"
+      },
+      {
+        "command": "npm publish ./"
+      },
+      {
+        "command": "git push",
+        "responses": {
+         "user:": "${GIT_USER}",
+         "password:": "${GIT_PASSWORD}"
+        }
+      }
+    ]
+  }
+  }

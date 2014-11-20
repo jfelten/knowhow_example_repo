@@ -1,0 +1,47 @@
+{
+  "id": "knowhow release job",
+  "working_dir": "./",
+  "options": {
+    "timeoutms": 3600
+  },
+  "files": [],
+  "script": {
+    "env": {
+      "PATH": "/opt/local/bin:/opt/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin",
+      "VERSION": "0.0.0",
+      "CHECKOUT_DIR": "${working_dir}/knowhow",
+      "GITHUB_TOKEN": "c6a13669d3bba5dd7ad5c363b3a6f5a579cb9768",
+      "GITHUB_PROJECT": "jfelten/knowhow",
+      "RPM_DIR": "rpmbuild/RPMS/x86_64"
+    },
+    "commands": [
+      {
+        "command": "VERSION=`npm view knowhow version`"
+      },
+      {
+        "command": "RPM_SOURCE_DIR=${working_dir}/knowhow-${VERSION}"
+      },
+      {
+        "command": "RPM_FILE=`ls ${RPM_DIR}`"
+      },
+      {
+        "command": "export RELEASE_JSON='{\"tag_name\":\"'\"$VERSION\"'\",\"target_commitish\": \"master\",\"name\": \"'\"$VERSION\"'\",\"body\": \"'\"knowhow release version $VERSION\"'\",\"draft\": false,\"prerelease\": false}'"
+      },
+      {
+        "command": "RELEASE_ID=`curl --data \"${RELEASE_JSON}\" https://api.github.com/repos/${GITHUB_PROJECT}/releases?access_token=${GITHUB_TOKEN} | jq .id"
+      },
+      {
+        "command": "curl -# -XPOST -H \"Authorization:token ${GITHUB_TOKEN}\" -H \"Content-Type:application/octet-stream\" --data-binary @${RPM_DIR}/${RPM_FILE} https://uploads.github.com/repos/${GITHUB_PROJECT}/releases/${RELEASE_ID}/assets?name=${RPM_FILE}"
+      },
+      {
+        "command": "sed -i \"s~[0-9]\\+\\.[0-9]\\+\\.[0-9]\\+~${VERSION}~g\" README.md"
+      },
+      {
+        "command": "git commit -m \"built ${VERSION} rpm\" || :"
+      },
+      {
+        "command": "git push"
+      }
+    ]
+  }
+}

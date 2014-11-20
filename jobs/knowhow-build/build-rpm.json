@@ -1,0 +1,81 @@
+{
+  "id": "build knowhow rpm job",
+  "working_dir": "./",
+  "options": {
+    "timeoutms": 3600
+  },
+  "files": [],
+  "script": {
+    "env": {
+      "PATH": "/opt/local/bin:/opt/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin",
+      "VERSION": "0.0.0",
+      "NPM_NAME": "knowhow",
+      "CHECKOUT_DIR": "${working_dir}/${NPM_NAME}",
+      "RPM_TOP_DIR": "${working_dir}/rpmbuild",
+      "SPEC_FILE": "dist/SPECS/knowhow.SPEC",
+      "GIT_REPOSITORY": "https://github.com/jfelten/knowhow.git"
+    },
+    "commands": [
+      {
+        "command": "rm -rf $CHECKOUT_DIR"
+      },
+      {
+        "command": "mkdir -p $CHECKOUT_DIR"
+      },
+      {
+        "command": "git clone ${GIT_REPOSITORY} ${CHECKOUT_DIR}"
+      },
+      {
+        "command": "cd $CHECKOUT_DIR"
+      },
+      {
+        "command": "npm update"
+      },
+      {
+        "command": "tar xzf ${CHECKOUT_DIR}/node_modules/knowhow-server/node-*.tar.gz -C ${CHECKOUT_DIR}"
+      },
+      {
+        "command": "cd $CHECKOUT_DIR"
+      },
+      {
+        "command": "VERSION=`npm view ${NPM_NAME} version`"
+      },
+      {
+        "command": "RPM_SOURCE_DIR=${working_dir}/${NPM_NAME}-${VERSION}"
+      },
+      {
+        "command": "cd ${working_dir}"
+      },
+      {
+        "command": "rm -rf $RPM_SOURCE_DIR"
+      },
+      {
+        "command": "rsync -rv --exclude .git $CHECKOUT_DIR/* $RPM_SOURCE_DIR"
+      },
+      {
+        "command": "tar czf ${NPM_NAME}.tar.gz ${NPM_NAME}-${VERSION}"
+      },
+      {
+        "command": "mkdir -p $RPM_TOP_DIR/SPECS $RPM_TOP_DIR/SOURCES"
+      },
+      {
+        "command": "cp ${NPM_NAME}.tar.gz $RPM_TOP_DIR/SOURCES"
+      },
+      {
+        "command": "cp ${RPM_SOURCE_DIR}/${SPEC_FILE} $RPM_TOP_DIR/SPECS/${NPM_NAME}_${VERSION}.SPEC"
+      },
+      {
+        "command": "rm -rf  ${RPM_SOURCE_DIR}/dist/*"
+      },
+      {
+        "command": "sed -i \"s~<version>~$VERSION~g\" $RPM_TOP_DIR/SPECS/${NPM_NAME}_${VERSION}.SPEC"
+      },
+      {
+        "command": "cd $RPM_TOP_DIR"
+      },
+      {
+        "command": "rpmbuild -bb --define \"_topdir $RPM_TOP_DIR\" SPECS/${NPM_NAME}_${VERSION}.SPEC"
+      }
+    ]
+  }
+}

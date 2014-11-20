@@ -1,0 +1,25 @@
+{ 
+ "id": "clone kniowhow-examples GIT repo",
+ "working_dir": "./",
+ "options": {
+  "timeoutms": 3600
+},
+  "script": {
+   "env": {
+    "REPO_TO_CLONE": "https://github.com/jfelten/knowhow_example_repo.git",
+    "CHECKOUT_DIR": "${working_dir}/knowhow_example_repo",
+    "GIT_PASSWORD": "MY_PASSWORD"
+    },
+    "commands": [
+      {
+        "command": "rm -rf ${CHECKOUT_DIR}"
+      },
+      {
+        "command": "git clone $REPO_TO_CLONE $CHECKOUT_DIR",
+        "responses": {
+          "password": "$GIT_PASSWORD"
+        }
+      }
+    ]
+  }
+}

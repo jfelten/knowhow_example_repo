@@ -1,0 +1,47 @@
+{ 
+    "id": "npm init example job",
+    "working_dir": "./",
+    "options": {
+        "timeoutms": 3600
+    },
+    "files": [],
+    "script": {
+        "env": {
+            "PATH": "/opt/local/bin:/opt/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin",
+            "PROJECT_DIR": "${working_dir}/npmTest",
+            "NAME": "knowhow_project",
+            "VERSION": "0.0.0",
+            "DESCRIPTION": "An example that demos a knowhow job",
+            "ENTRY_POINT": "\r",
+            "TEST_COMMAND": "npm test",
+            "GIT_REPOSITORY": "\n",
+            "KEYWORDS": "very cool",
+            "AUTHOR": "jfelten",
+            "LICENSE": "GPL-3.0+" 
+        },
+        "commands": [
+            {
+                "command": "rm -rf $PROJECT_DIR"
+            },
+            {
+                "command": "cd $PROJECT_DIR"
+            },
+            {
+                "command": "npm init",
+                "responses": {
+                    "name:": "${NAME}",
+                    "version:": "${VERSION}",
+                    "description:": "${DESCRIPTION}",
+                    "entry point:": "${ENTRY_POINT}",
+                    "test command:": "${TEST_COMMAND}",
+                    "git repository:": "${GIT_REPOSITORY}",
+                    "keywords:": "${KEYWORDS}",
+                    "author:": "${AUTHOR}",
+                    "license:": "${LICENSE}",
+                    "Is this ok?": "\n"
+               }
+           }
+       ] 
+        
+     }
+}
