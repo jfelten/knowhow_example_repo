@@ -139,6 +139,8 @@ First remove any existing template, and then commit.  We named our repository kn
     
 ###Clone the template to create a container
 
+Remove the last 4 commands if you are using out of the box networking.  I needed to change the default route using nsenter route since the out of the box netowrking does not work for my netowrk.
+
     {
         "id": "create a new KH docker container",
         "working_dir": "./",
@@ -229,3 +231,6 @@ Docker is easy to learn, but I found networking with Docker to be painful.  Out 
       }
     }
 
+###Now We are ready to build our Docker army
+
+We do this by creating a work flow.  Click to continue the tutorial
