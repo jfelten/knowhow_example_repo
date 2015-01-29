@@ -1,4 +1,4 @@
-Tutorial using Docker
+Tutorial on to to build an army of knowhow agents using Docker
 ------------------------
 
 [Docker](https://www.docker.com/) is a container based virutalization platform designed to run a single service per instance.  It works very well with knowhow, and the author (jfelten) uses docker to create a pool of workers that are managed with [knowhow-server](https://github.com/jfelten/knowhow-server).  In this exmample we are providing the jobs used to:
