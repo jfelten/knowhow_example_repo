@@ -49,7 +49,7 @@ The Docker software is available in the standard centos yum repo and should be i
     
 ###Create a knowhow docker template
 
-In this job start up a bash shell to a centos7 image that we pull from Docker's standard library.  We then install the centos EPEL yum repository, nodejs, npm, and lastly knowhow via npm.  Note: we need to install make because it is needed by node-gyp.
+In this job start up a bash shell to a centos7 image that we pull from Docker's standard library.  We then install the centos EPEL yum repository, nodejs, npm, and lastly knowhow via npm.  Note: we need to install make because it is needed by node-gyp.  We reinstall npm with npm because the npm rpm on EPEL is outdated.
 
     {
         "id": "create KH docker template",
@@ -135,7 +135,49 @@ First remove any existing template, and then commit.  We named our repository kn
             }
             ]
         }
-}
+    }
+    
+###Clone the template to create a container
+
+    {
+        "id": "create a new KH docker container",
+        "working_dir": "./",
+        "options": {
+            "timeoutms": 360000
+        },
+        "files": [],
+        "script": {
+        "env": {
+            "CONTAINER_NAME": "container201",
+            "DOMAIN": "zenzic.com",
+            "GATEWAY": "10.10.1.1",
+            "TEMPLATE_NAME": "knowhow"
+        },
+        "commands": [
+        {
+            "command": "docker stop ${CONTAINER_NAME} || :"
+        },
+        {
+            "command": "docker rm ${CONTAINER_NAME} || :"
+        },
+        {
+            "command": "docker run -d --name=${CONTAINER_NAME} --hostname=${CONTAINER_NAME}.${DOMAIN} ${TEMPLATE_NAME} startKHAgent --user=root"
+        },
+        {
+            "command": "PID=`docker inspect --format='{{.State.Pid}}' ${CONTAINER_NAME}`"
+        },
+        {
+            "command": "sleep 5"
+        },
+        {
+            "command": "nsenter -t ${PID} -n /usr/sbin/ip route del default"
+        },
+        {
+            "command": "nsenter -t ${PID} -n /usr/sbin/ip route add default via ${GATEWAY} dev eth0"
+        }
+        ]
+        }
+    }
 
 
 
