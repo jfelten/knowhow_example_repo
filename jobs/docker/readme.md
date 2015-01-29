@@ -179,5 +179,53 @@ First remove any existing template, and then commit.  We named our repository kn
         }
     }
 
+### (OPTIONAL) Add a dns record for each container
+Docker is easy to learn, but I found networking with Docker to be painful.  Out of the box Docker installs a virtual bridge called docker0, which handles connectivity via NAT.  This didn't work for me since I wanted all containers accessible on my normal network.  Since I already had a netowrk bridge I configured Docker to connect to it using a subset of my internal network.  I tried using pipework to assign addresses via dhcp, but that didn't work because the watered-down Docker networking wasn't able to renogiate a dhcp lease when it expired.  In the end I let docker assign a static IP and then used the following job to add a DNS record on my internal server.
 
+    {
+      "id": "add dns record for a new container",
+      "working_dir": "./",
+      "options": {
+        "timeoutms": 360000
+      },
+      "files": [],
+      "script": {
+        "env": {
+          "DNS_SERVER": "10.10.1.10",
+          "DNS_ZONE": "zenzic.com",
+          "CONTAINER_NAME": "container201",
+          "UPDATE_FILE": "dns_update",
+          "KEY_NAME": "/etc/rndc.key"
+        },
+        "commands": [
+          {
+            "command": "IP_ADDRESS=`docker inspect --format='{{.NetworkSettings.IPAddress}}' ${CONTAINER_NAME}`"
+          },
+          {
+            "command": "rm -f ${UPDATE_FILE}"
+          },
+          {
+            "command": "echo \"server ${DNS_SERVER}\" > ${UPDATE_FILE}"
+          },
+          {
+            "command": "echo \"zone ${DNS_ZONE}\" >> ${UPDATE_FILE}"
+          },
+          {
+            "command": "echo \"update delete ${CONTAINER_NAME}.${DNS_ZONE}. A\" >> ${UPDATE_FILE}"
+          },
+          {
+            "command": "echo \"update add ${CONTAINER_NAME}.${DNS_ZONE}. 86400 A ${IP_ADDRESS}\" >> ${UPDATE_FILE}"
+          },
+          {
+            "command": "echo 'show' >> ${UPDATE_FILE}"
+          },
+          {
+            "command": "echo 'send' >> ${UPDATE_FILE}"
+          },
+          {
+            "command": "nsupdate -k ${KEY_NAME} -v ${UPDATE_FILE}"
+          }
+        ]
+      }
+    }
 
