@@ -1,0 +1,31 @@
+{
+  "id": "install docker software",
+  "working_dir": "./",
+  "options": {
+    "timeoutms": 360000
+  },
+  "files": [],
+  "script": {
+    "env": {
+      "TEST_VAR": "TEST",
+      "TEST_VAR2": "TEST2"
+    },
+    "commands": [
+      {
+        "command": "yum -y install docker"
+      },
+      {
+        "command": "systemctl enable docker"
+      },
+      {
+        "command": "systemctl start docker"
+      },
+      {
+        "command": "docker pull centos"
+      },
+      {
+        "command": "bash -c \"curl https://raw.githubusercontent.com/jpetazzo/pipework/master/pipework > /usr/local/bin/pipework\""
+      }
+    ]
+  }
+}

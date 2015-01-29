@@ -1,0 +1,39 @@
+{
+  "id": "create a new KH docker container",
+  "working_dir": "./",
+  "options": {
+    "timeoutms": 360000
+  },
+  "files": [],
+  "script": {
+    "env": {
+      "CONTAINER_NAME": "container201",
+      "DOMAIN": "zenzic.com",
+      "GATEWAY": "10.10.1.1",
+      "TEMPLATE_NAME": "knowhow"
+    },
+    "commands": [
+      {
+        "command": "docker stop ${CONTAINER_NAME} || :"
+      },
+      {
+        "command": "docker rm ${CONTAINER_NAME} || :"
+      },
+      {
+        "command": "docker run -d --name=${CONTAINER_NAME} --hostname=${CONTAINER_NAME}.${DOMAIN} ${TEMPLATE_NAME} startKHAgent --user=root"
+      },
+      {
+        "command": "PID=`docker inspect --format='{{.State.Pid}}' ${CONTAINER_NAME}`"
+      },
+      {
+        "command": "sleep 5"
+      },
+      {
+        "command": "nsenter -t ${PID} -n /usr/sbin/ip route del default"
+      },
+      {
+        "command": "nsenter -t ${PID} -n /usr/sbin/ip route add default via ${GATEWAY} dev eth0"
+      }
+    ]
+  }
+}

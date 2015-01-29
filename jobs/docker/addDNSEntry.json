@@ -1,0 +1,46 @@
+{
+  "id": "add dns record for a new container",
+  "working_dir": "./",
+  "options": {
+    "timeoutms": 360000
+  },
+  "files": [],
+  "script": {
+    "env": {
+      "DNS_SERVER": "10.10.1.10",
+      "DNS_ZONE": "zenzic.com",
+      "CONTAINER_NAME": "container201",
+      "UPDATE_FILE": "dns_update",
+      "KEY_NAME": "/etc/rndc.key"
+    },
+    "commands": [
+      {
+        "command": "IP_ADDRESS=`docker inspect --format='{{.NetworkSettings.IPAddress}}' ${CONTAINER_NAME}`"
+      },
+      {
+        "command": "rm -f ${UPDATE_FILE}"
+      },
+      {
+        "command": "echo \"server ${DNS_SERVER}\" > ${UPDATE_FILE}"
+      },
+      {
+        "command": "echo \"zone ${DNS_ZONE}\" >> ${UPDATE_FILE}"
+      },
+      {
+        "command": "echo \"update delete ${CONTAINER_NAME}.${DNS_ZONE}. A\" >> ${UPDATE_FILE}"
+      },
+      {
+        "command": "echo \"update add ${CONTAINER_NAME}.${DNS_ZONE}. 86400 A ${IP_ADDRESS}\" >> ${UPDATE_FILE}"
+      },
+      {
+        "command": "echo 'show' >> ${UPDATE_FILE}"
+      },
+      {
+        "command": "echo 'send' >> ${UPDATE_FILE}"
+      },
+      {
+        "command": "nsupdate -k ${KEY_NAME} -v ${UPDATE_FILE}"
+      }
+    ]
+  }
+}

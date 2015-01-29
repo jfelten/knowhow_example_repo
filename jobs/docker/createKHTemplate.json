@@ -1,0 +1,57 @@
+{
+  "id": "create KH docker template",
+  "working_dir": "./",
+  "options": {
+    "timeoutms": 3600000
+  },
+  "shell": {
+    "command": "docker run -i -t --name=${CONTAINER_NAME} --hostname=${CONTAINER_NAME}.${DOMAIN} centos /bin/bash",
+    "onConnect": {
+      "waitForPrompt": "[#]"
+    },
+    "onExit": {
+      "command": "exit\r\n"
+    }
+  },
+  "files": [],
+  "script": {
+    "env": {
+      "CONTAINER_NAME": "KH_template",
+      "DOMAIN": "zenzic.com",
+      "EPEL_RPM": "epel-release-7-5.noarch.rpm",
+      "EPEL_RPM_LOC": "http://dl.fedoraproject.org/pub/epel/7/x86_64/e/${EPEL_RPM}"
+    },
+    "commands": [
+      {
+        "command": "curl -O ${EPEL_RPM_LOC}"
+      },
+      {
+        "command": "rpm -ivh --replacepkgs ${EPEL_RPM}"
+      },
+      {
+        "command": "yum -y install telnet mlocate"
+      },
+      {
+        "command": "yum update -y"
+      },
+      {
+        "command": "rm -rf /usr/lib/node_modules"
+      },
+      {
+        "command": "yum -y erase npm nodejs"
+      },
+      {
+        "command": "yum -y install nodejs npm make"
+      },
+      {
+        "command": "npm install -g npm"
+      },
+      {
+        "command": "npm update -g"
+      },
+      {
+        "command": "npm install knowhow -g"
+      }
+    ]
+  }
+}
