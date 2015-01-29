@@ -109,7 +109,33 @@ In this job start up a bash shell to a centos7 image that we pull from Docker's 
     }
     }
 
+###Commit the template to the docker repository
 
+First remove any existing template, and then commit.  We named our repository knowhow and gave it a tag name latest.
+
+        {
+            "id": "commits the docker template",
+            "working_dir": "./",
+            "options": {
+                "timeoutms": 360000
+            },
+            "files": [],
+            "script": {
+            "env": {
+                "REPOSITORY_NAME": "knowhow",
+                "TAG_NAME": "latest",
+                "TEMPLATE_NAME": "KH_template"
+            },
+            "commands": [
+            {
+                "command": "docker rmi ${REPOSITORY_NAME}:${TAG_NAME}"
+            },
+            {
+                "command": "docker commit ${TEMPLATE_NAME} ${REPOSITORY_NAME}:${TAG_NAME}"
+            }
+            ]
+        }
+}
 
 
 
