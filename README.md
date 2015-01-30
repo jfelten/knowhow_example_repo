@@ -18,6 +18,7 @@ jobs that are used to publish the knowhow modules on npm.  There is also a job t
 ####[NPM](https://github.com/jfelten/knowhow_example_repo/tree/master/jobs/npm) 
 simple example of using knowhow to automate npm publishing
 
+##Install this repository locally
 ####Install via npm
 npm install knowhow_example_repo 
 
