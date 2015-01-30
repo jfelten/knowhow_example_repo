@@ -20,7 +20,8 @@ simple example of using knowhow to automate npm publishing
 
 ##Install this repository locally
 ####Install via npm
-npm install knowhow_example_repo 
+
+    npm install knowhow_example_repo 
 
 ####Import directly into a [knowhow_server](https://github.com/jfelten/knowhow-server)
 Navigate to the repositories tab.  Name the repository knowhow-example and select a directory location on the file system.  Paste this github url: https://github.com/jfelten/knowhow_example_repo.git into the git URL box.  Click Import from GIT
