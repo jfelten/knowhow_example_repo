@@ -82,3 +82,83 @@ A knowhow workflow is a collection of tasks.  Each task wraps a job and defines 
 * Task 3 On host localhost commit the template to the local docker repository using job: knowhow-example:///jobs/docker/commitTemplate.json
 * Task 4 On host localhost create the containers worker1-worker10 in series using job: knowhow-example:///jobs/docker/createHost.json
 * Task 5 On host localhost add DNS entires for worker1-worker10 in series using job: knowhow-example:///jobs/docker/addDNSEntry.json
+
+Here is the workflow json object:
+
+    {
+      "id": "create docker containers",
+      "env": {},
+      "taskList": [
+        {
+          "id": "install docker software",
+          "type": "series",
+          "agents": [
+            {
+              "agent": "docker_host"
+            }
+          ],
+          "options": {},
+          "jobref": "knowhow-example:///jobs/docker/installDocker.json"
+        },
+        {
+          "id": "create template",
+          "type": "series",
+          "agents": [
+            {
+              "agent": "docker_host"
+            }
+          ],
+          "options": {},
+          "jobref": "knowhow-example:///jobs/docker/createKHTemplate.json"
+        },
+        {
+          "id": "commit template",
+          "type": "series",
+          "agents": [
+            {
+              "agent": "docker_host"
+            }
+          ],
+          "options": {},
+          "jobref": "knowhow-example:///jobs/docker/commitTemplate.json"
+        },
+        {
+          "id": "create workers",
+          "type": "series",
+          "agents": [
+            {
+              "agent": "docker_host",
+              "repeat": [
+                {
+                  "CONTAINER_NAME": "worker[1-10]"
+                }
+              ]
+            }
+          ],
+          "options": {},
+          "jobref": "knowhow-example:///jobs/docker/createHost.json"
+        },
+        {
+          "id": "add dns for container",
+          "type": "paralell",
+          "env": {
+            "CONTAINER_NAME": "localhost"
+          },
+          "agents": [
+            {
+              "agent": "docker_host",
+              "repeat": [
+                {
+                  "CONTAINER_NAME": "worker[1-10]"
+                }
+              ]
+            }
+          ],
+          "options": {},
+          "jobref": "knowhow-example:///jobs/docker/addDNSEntry.json"
+        }
+      ]
+    }
+    
+###Step 3 Execute the workflow
+Start up [knowhow-server](https://github.com/jfelten/knowhow-server).  Assuimg the [example_repo](https://github.com/jfelten/knowhow_example_repo) is installed on your server, Navigate to the workflows tab and select it from the repository drop-down on the left hand nav.  In the environments tree select the environment.json file under the docker directory.  In the workflows tree select the createDockerContainers directory under tje docker directory.  Click execute workflow.  If there are no errors then it worked.
