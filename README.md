@@ -6,7 +6,7 @@ This is an example repository for [knowhow](https://github.com/jfelten/knowhow).
 Please go to the readme file in each of the individual directories
 
 
-####[Build a docker Army](https://github.com/jfelten/knowhow_example_repo/tree/master/jobs/docker)
+####[Build a docker army](https://github.com/jfelten/knowhow_example_repo/tree/master/jobs/docker)
 Example showing how to build an army of knowhow agents using docker
 
 ####[GitHub](https://github.com/jfelten/knowhow_example_repo/tree/master/jobs/git) 
