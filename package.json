@@ -1,0 +1,30 @@
+{
+  "name": "knowhow-example",
+  "version": "1.0.0",
+  "description": "An repository containing tutorials and examples on how to use knowhow",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jfelten/knowhow_example_repo"
+  },
+  "keywords": [
+    "git",
+    "raspberry",
+    "pi",
+    "docker",
+    "npm",
+    "knowhow",
+    "automation",
+    "json",
+    "shell"
+  ],
+  "author": "John Felten <john@zenzic.com> (https://github.com/jfelten/knowhow)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jfelten/knowhow_example_repo/issues"
+  },
+  "homepage": "https://github.com/jfelten/knowhow_example_repo"
+}
