@@ -233,4 +233,4 @@ Docker is easy to learn, but I found networking with Docker to be painful.  Out 
 
 ###Now We are ready to build our Docker army
 
-We do this by creating a work flow.  Click to continue the tutorial
+We do this by creating a work flow.  [Click to continue the tutorial >>](https://github.com/jfelten/knowhow_example_repo/tree/master/workflows/docker)
