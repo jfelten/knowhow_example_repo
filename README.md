@@ -1,7 +1,7 @@
 knowhow_example_repo
 ====================
 
-This is an example repository for knowhow.
+This is an example repository for [knowhow](https://github.com/jfelten/knowhow).
 
 Please go to the readme file in each of the individual directories
 
