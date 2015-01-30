@@ -23,5 +23,5 @@ npm install knowhow_example_repo
 
 ####Import directly into a [knowhow_server](https://github.com/jfelten/knowhow-server)
 Navigate to the repositories tab.  Name the repository knowhow-example and select a directory location on the file system.  Paste this github url: https://github.com/jfelten/knowhow_example_repo.git into the git URL box.  Click Import from GIT
-![import](https://raw.githubusercontent.com/jfelten/knowhow-server/master/docs/screenshots/helloWorldJob.png)
+![import](https://raw.githubusercontent.com/jfelten/knowhow_example_repo/master/install.png)
 
