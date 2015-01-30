@@ -8,10 +8,9 @@ Please read the tutorial under knowhow_example_repo/jobs/docker first.  This exp
 * commit the template to the docker repository
 * create 10 docker containers running knowhow-agent with this template
 * configure networking on each container
-* 
 
 ###Step 1 Create the environment file
-Environment files define and designate hosts within your system.  All environment files must be named environmnet.json and may be placed anywhere under the environment directory.  For this example we have created an environment file: knowhow_repo:///environments/docker/environment.json that defines 11 hosts: 1 docker hsot + 10 containers.  We definedthat the docker host in on localhost.  All other hosts get created via this workflow.
+Environment files define and designate hosts that run agents within your system.  All environment files must be named environmnet.json and may be placed anywhere under the environment directory.  For this example we have created an environment file: knowhow_repo:///environments/docker/environment.json that defines 11 hosts: 1 docker hsot + 10 containers.  We definedthat the docker host in on localhost.  All other hosts get created via this workflow.
 
 
     {
@@ -74,3 +73,12 @@ Environment files define and designate hosts within your system.  All environmen
         }
       }
     }
+
+###Step 2 Define the workflow
+A knowhow workflow is a collection of tasks.  Each task wraps a job and defines an execution type:  series or paralell.  Series tasks are run one at a time in the order specified.  Paralell tasks are run concurrently.  In this example we will run everything as a series task.  Here is a walkthrough of the tasks: 
+
+* Task 1 On host localhost install docker and everything else it needs using job: knowhow-example:///jobs/docker/installDocker.json
+* Task 2 On host localhost create a centos7 template that has knowhow installed using job: knowhow-example:///jobs/docker/createKHTemplate.json
+* Task 3 On host localhost commit the template to the local docker repository using job: knowhow-example:///jobs/docker/commitTemplate.json
+* Task 4 On host localhost create the containers worker1-worker10 in series using job: knowhow-example:///jobs/docker/createHost.json
+* Task 5 On host localhost add DNS entires for worker1-worker10 in series using job: knowhow-example:///jobs/docker/addDNSEntry.json
