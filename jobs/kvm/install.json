@@ -1,0 +1,74 @@
+{
+  "id": "install libvirtd and kvm pages on centos 7",
+  "working_dir": "./",
+  "options": {
+    "timeoutms": 360000
+  },
+  "shell": {
+    "command": "sudo su -",
+    "onConnect": {
+      "responses": {
+        "[Pp]assword": "${PASSWORD}"
+      },
+      "errorConditions": [
+        "Sorry",
+        "[Dd]enied"
+      ],
+      "waitForPrompt": "[#]"
+    },
+    "onExit": {
+      "command": "exit"
+    }
+  },
+  "files": [],
+  "script": {
+    "env": {
+      "PASSWORD": "my_password",
+      "EPEL_RPM": "epel-release-7-5.noarch.rpm",
+      "EPEL_RPM_LOC": "http://dl.fedoraproject.org/pub/epel/7/x86_64/e/${EPEL_RPM}",
+      "VIR_BR_NETWORK": "10.10.1"
+    },
+    "commands": [
+      {
+        "command": "curl -O ${EPEL_RPM_LOC}"
+      },
+      {
+        "command": "rpm -ivh --replacepkgs ${EPEL_RPM}"
+      },
+      {
+        "command": "yum -y install qemu-kvm libvirt virt-install bridge-utils libguestfs-tools"
+      },
+      {
+        "command": "yum -y install xorg-x11-xauth xorg-x11-fonts-* xorg-x11-utils"
+      },
+      {
+        "command": "yum -y install virt-manager virt-manager"
+      },
+      {
+        "command": "sed -i 's/^\\(net.ipv4.ip_forward =\\).*/\\1 1/' /etc/sysctl.conf; sysctl -p"
+      },
+      {
+        "command": "systemctl start libvirtd"
+      },
+      {
+        "command": "systemctl enable libvirtd"
+      },
+      {
+        "description": "Only do this if you are using the KVM virtual NAT bridge and if you want to allow ssh and know how agents into your guests.  Remove the echo command to execute:",
+        "command": "echo 'mkdir -p  /etc/libvirt/hooks'"
+      },
+      {
+        "description": "Only do this if you are using the KVM virtual NAT bridge and if you want to allow ssh and know how agents into your guests.  Remove the echo command to execute:",
+        "command": "echo 'echo \"!#/bin/bash\" > /etc/libvirt/hooks/qemu'"
+      },
+      {
+        "description": "Only do this if you are using the KVM virtual NAT bridge and if you want to allow ssh and know how agents into your guests.  Remove the echo command to execute, replace with the firewall-cmd if you are using firewalld",
+        "command": "echo 'echo \"iptables -I FORWARD -d ${VIR_BR_NETWORK}.0/24 -p tcp -m state --state NEW -m tcp --dport 22 -j ACCEPT\" >> /etc/libvirt/hooks/qemu'"
+      },
+      {
+        "description": "Only do this if you are using the KVM virtual NAT bridge and if you want to allow ssh and know how agents into your guests.  Remove the echo command to execute, replace with the firewall-cmd if you are using firewalld",
+        "command": "echo 'echo \"iptables -I FORWARD -d ${VIR_BR_NETWORK}.0/24 -p tcp -m state --state NEW -m tcp --dport 3000 -j ACCEPT\" >> /etc/libvirt/hooks/qemu'"
+      }
+    ]
+  }
+}

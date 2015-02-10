@@ -1,0 +1,61 @@
+{
+  "id": "clones a kvm guest",
+  "working_dir": "./",
+  "options": {
+    "timeoutms": 360000
+  },
+  "files": [],
+  "script": {
+    "env": {
+      "PATH": "/opt/local/bin:/opt/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin",
+      "TEMPLATE_NAME": "template",
+      "NEW_GUEST_NAME": "worker102",
+      "DOMAIN": "zenzic.com",
+      "RAM": "2",
+      "TEMPLATE_DISK_SPACE": "5",
+      "DISK_SPACE": "5",
+      "DISK": "path=/var/kvm/images/${NEW_GUEST_NAME}.img,size=${DISK_SPACE}",
+      "VCPUS": "2",
+      "OS_TYPE": "linux",
+      "OS_VARIANT": "rhel7",
+      "NETWORK_BRIDGE": "br0",
+      "LOCATION": "http://ftp.iij.ad.jp/pub/linux/centos/7/os/x86_64/",
+      "EXTRA_ARGS": "ks=file:///tmp/kickstart.cfg console=ttyS0,115200n8 serial"
+    },
+    "commands": [
+      {
+        "command": "virsh destroy ${NEW_GUEST_NAME} || :"
+      },
+      {
+        "command": "virsh undefine ${NEW_GUEST_NAME}; sleep 15 || :"
+      },
+      {
+        "command": "rm -f /home/kvm/disks/${NEW_GUEST_NAME}.dsk"
+      },
+      {
+        "command": "virt-clone --connect=qemu:///system -o ${TEMPLATE_NAME} -n ${NEW_GUEST_NAME} -f /home/kvm/disks/${NEW_GUEST_NAME}.dsk --force; sleep 10"
+      },
+      {
+        "command": "qemu-img resize /home/kvm/disks/${NEW_GUEST_NAME}.dsk ${DISK_SPACE}G"
+      },
+      {
+        "command": "virt-resize --expand /dev/vda2 --LV-expand /dev/centos/root /home/kvm/disks/${TEMPLATE_NAME}.dsk /home/kvm/disks/${NEW_GUEST_NAME}.dsk"
+      },
+      {
+        "command": "virsh autostart ${NEW_GUEST_NAME}"
+      },
+      {
+        "command": "virt-sysprep -d ${NEW_GUEST_NAME} --hostname ${NEW_GUEST_NAME}.${DOMAIN}"
+      },
+      {
+        "command": "virsh setmaxmem ${NEW_GUEST_NAME} ${RAM}G --config"
+      },
+      {
+        "command": "virsh start ${NEW_GUEST_NAME}"
+      },
+      {
+        "command": "virsh setvcpus ${NEW_GUEST_NAME} ${VCPUS}"
+      }
+    ]
+  }
+}
