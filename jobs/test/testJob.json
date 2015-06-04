@@ -1,0 +1,22 @@
+{
+  "id": "dummy Job to test workflows",
+  "working_dir": "./",
+  "options": {
+    "timeoutms": 360000
+  },
+  "files": [],
+  "script": {
+    "env": {
+      "TEST_VAR": "hello",
+      "TEST_VAR2": "world"
+    },
+    "commands": [
+      {
+        "command": "echo ${TEST_VAR}"
+      },
+      {
+        "command": "echo $TEST_VAR2"
+      }
+    ]
+  }
+}
